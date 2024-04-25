@@ -20,9 +20,11 @@ app.use(cookieParser());
 //Route Files
 const auth = require("./routes/auth.js");
 const restaurant = require("./routes/restaurants.js");
+const ticket = require("./routes/ticket.js");
 
 app.use("/api/v1/auth", auth);
 app.use("/api/v1/restaurants", restaurant);
+app.use("/api/v1/tickets", ticket);
 
 const PORT = process.env.PORT || 5000;
 app.listen(

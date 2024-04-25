@@ -83,7 +83,7 @@ exports.createRestaurant = async (req, res, next) => {
     const restaurant = await Restaurant.create(req.body);
     res.status(201).json({ success: true, data: restaurant });
   } catch (error) {
-    res.status(400).json({ success: true, message: error.message });
+    res.status(400).json({ success: false, message: error.message });
   }
 };
 
