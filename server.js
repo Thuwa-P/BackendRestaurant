@@ -17,10 +17,6 @@ app.use(express.json());
 //Cookie parser
 app.use(cookieParser());
 
-app.get("/", (req, res) => {
-  res.status(200).json({ success: true, message: "Hello World!" });
-});
-
 //Route Files
 const auth = require("./routes/auth.js");
 
