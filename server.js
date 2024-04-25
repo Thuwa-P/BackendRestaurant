@@ -23,8 +23,10 @@ app.get("/", (req, res) => {
 
 //Route Files
 const auth = require("./routes/auth.js");
+const restaurant = require("./routes/restaurants.js");
 
 app.use("/api/v1/auth", auth);
+app.use("/api/v1/restaurants", restaurant);
 
 const PORT = process.env.PORT || 5000;
 app.listen(
