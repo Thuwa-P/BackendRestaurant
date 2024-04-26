@@ -18,12 +18,18 @@ exports.getTickets = async (req, res, next) => {
       /\b(gt|gte|lt|lte|in)\b/g,
       (match) => `$${match}`
     );
-    query = Ticket.find(JSON.parse(queryStr));
+    query = Ticket.find(JSON.parse(queryStr)).populate({
+      path: "user",
+      select: "name email telephone",
+    });
 
     //Select
     if (req.query.select) {
       const fields = req.query.select.split(",").join(" ");
-      query = query.select(fields);
+      query = query.select(fields).populate({
+        path: "user",
+        select: "name email telephone",
+      });
     }
 
     //Sort
@@ -31,7 +37,10 @@ exports.getTickets = async (req, res, next) => {
       const sortBy = req.query.sort.split(",").join(" ");
       query = query.sort(sortBy);
     } else {
-      query = query.sort("-createdAt");
+      query = query.sort("-createdAt").populate({
+        path: "user",
+        select: "name email telephone",
+      });
     }
     //Pagination
     const page = parseInt(req.query.page, 10) || 1;
@@ -73,7 +82,7 @@ exports.getTickets = async (req, res, next) => {
 exports.getTicket = async (req, res, next) => {
   try {
     const userTickets = await Ticket.find({ user: req.user.id });
-    console.log(userTickets);
+
     const hasTicket = userTickets.some((ticket) =>
       ticket._id.equals(req.params.id)
     );
