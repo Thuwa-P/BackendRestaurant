@@ -18,18 +18,29 @@ exports.getTickets = async (req, res, next) => {
       /\b(gt|gte|lt|lte|in)\b/g,
       (match) => `$${match}`
     );
-    query = Ticket.find(JSON.parse(queryStr)).populate({
-      path: "user",
-      select: "name email telephone",
-    });
+    query = Ticket.find(JSON.parse(queryStr))
+      .populate({
+        path: "user",
+        select: "name email telephone",
+      })
+      .populate({
+        path: "restaurant",
+        select: "name province tel openTime closeTime",
+      });
 
     //Select
     if (req.query.select) {
       const fields = req.query.select.split(",").join(" ");
-      query = query.select(fields).populate({
-        path: "user",
-        select: "name email telephone",
-      });
+      query = query
+        .select(fields)
+        .populate({
+          path: "user",
+          select: "name email telephone",
+        })
+        .populate({
+          path: "restaurant",
+          select: "name province tel openTime closeTime",
+        });
     }
 
     //Sort
@@ -37,10 +48,16 @@ exports.getTickets = async (req, res, next) => {
       const sortBy = req.query.sort.split(",").join(" ");
       query = query.sort(sortBy);
     } else {
-      query = query.sort("-createdAt").populate({
-        path: "user",
-        select: "name email telephone",
-      });
+      query = query
+        .sort("-createdAt")
+        .populate({
+          path: "user",
+          select: "name email telephone",
+        })
+        .populate({
+          path: "restaurant",
+          select: "name province tel openTime closeTime",
+        });
     }
     //Pagination
     const page = parseInt(req.query.page, 10) || 1;
@@ -92,10 +109,15 @@ exports.getTicket = async (req, res, next) => {
         message: `You are not authorize to view this ticket.`,
       });
     }
-    const ticket = await Ticket.findById(req.params.id).populate({
-      path: "user",
-      select: "name email telephone",
-    });
+    const ticket = await Ticket.findById(req.params.id)
+      .populate({
+        path: "user",
+        select: "name email telephone",
+      })
+      .populate({
+        path: "restaurant",
+        select: "name province tel openTime closeTime",
+      });
     if (!ticket) {
       return res.status(404).json({
         success: false,

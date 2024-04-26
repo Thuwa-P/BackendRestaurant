@@ -15,6 +15,10 @@ const TicketSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    restaurant: {
+      type: mongoose.Schema.ObjectId,
+      ref: "Restaurant",
+    },
     status: {
       type: String,
       enum: ["Pending", "Solved"],
