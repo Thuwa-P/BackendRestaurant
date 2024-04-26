@@ -72,6 +72,17 @@ exports.getTickets = async (req, res, next) => {
 //@access Public
 exports.getTicket = async (req, res, next) => {
   try {
+    const userTickets = await Ticket.find({ user: req.user.id });
+    console.log(userTickets);
+    const hasTicket = userTickets.some((ticket) =>
+      ticket._id.equals(req.params.id)
+    );
+    if (!hasTicket && req.user.role !== "admin") {
+      return res.status(401).json({
+        success: false,
+        message: `You are not authorize to view this ticket.`,
+      });
+    }
     const ticket = await Ticket.findById(req.params.id).populate({
       path: "user",
       select: "name email telephone",
@@ -84,7 +95,7 @@ exports.getTicket = async (req, res, next) => {
     }
     res.status(200).json({ success: true, data: ticket });
   } catch (error) {
-    res.status(400).json({ success: false });
+    res.status(400).json({ success: false, message: error });
   }
 };
 
