@@ -16,7 +16,7 @@ exports.getRestaurants = async (req, res, next) => {
       /\b(gt|gte|lt|lte|in)\b/g,
       (match) => `$${match}`
     );
-    query = Restaurant.find(JSON.parse(queryStr)); // .populate("reservations")
+    query = Restaurant.find(JSON.parse(queryStr)).populate("reservations");
 
     //Select
     if (req.query.select) {
