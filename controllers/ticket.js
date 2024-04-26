@@ -72,7 +72,10 @@ exports.getTickets = async (req, res, next) => {
 //@access Public
 exports.getTicket = async (req, res, next) => {
   try {
-    const ticket = await Ticket.findById(req.params.id);
+    const ticket = await Ticket.findById(req.params.id).populate({
+      path: "user",
+      select: "name email telephone",
+    });
     if (!ticket) {
       return res.status(404).json({
         success: false,
